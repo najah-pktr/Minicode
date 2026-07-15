@@ -5,11 +5,12 @@ import hashlib
 import urllib.request
 import re
 import ssl
+import threading
 from PyQt6.QtWidgets import (QApplication, QMainWindow, QSplitter, QTabWidget, 
                              QVBoxLayout, QWidget, QFileDialog, QMessageBox, 
                              QToolBar, QStatusBar, QStyle, QInputDialog, QDockWidget)
 from PyQt6.QtGui import QAction, QIcon
-from PyQt6.QtCore import Qt, QSize
+from PyQt6.QtCore import Qt, QSize, QTimer, pyqtSignal
 
 from ui.styles import DARK_STYLE
 from ui.editor import CodeEditor
@@ -19,6 +20,8 @@ from ui.preview import PreviewWindow
 from ui.super_ui import SuperUIDialog
 
 class MiniCode(QMainWindow):
+    style_processed = pyqtSignal(str)
+
     def __init__(self):
         """Initialize the MiniCode IDE."""
         super().__init__()
@@ -32,12 +35,24 @@ class MiniCode(QMainWindow):
         self.setup_toolbar()
         self.setup_statusbar()
         
+        self.style_processed.connect(self._finish_apply_style)
+        
         self.load_session()
 
     def get_config_path(self, filename):
         """Get the absolute path for a configuration file, ensuring portability."""
-        base_dir = os.path.dirname(os.path.abspath(__file__))
+        base_dir = os.path.join(os.path.expanduser("~"), ".minicode")
+        if not os.path.exists(base_dir):
+            os.makedirs(base_dir)
         return os.path.join(base_dir, filename)
+
+    def resource_path(self, relative_path):
+        """Get absolute path to resource, works for dev and for PyInstaller."""
+        try:
+            base_path = sys._MEIPASS
+        except Exception:
+            base_path = os.path.abspath(".")
+        return os.path.join(base_path, relative_path)
 
     def setup_ui(self):
         """Set up the modular user interface using DockWidgets."""
@@ -271,6 +286,7 @@ class MiniCode(QMainWindow):
                 editor.setPlainText(content)
                 editor.setProperty("file_path", file_path)
                 editor.cursorPositionChanged.connect(self.update_status)
+                editor.textChanged.connect(self.update_live_preview)
                 
                 self.tabs.addTab(editor, os.path.basename(file_path))
                 self.tabs.setCurrentWidget(editor)
@@ -390,13 +406,15 @@ class MiniCode(QMainWindow):
         if not current_tab:
             return
             
-        file_path = current_tab.property("file_path")
-        if not file_path:
-            QMessageBox.warning(self, "Preview", "Please save the file first to preview.")
-            return
-
-        self.preview_window.load_file(file_path)
+        self.preview_window.set_html(current_tab.toPlainText())
         self.preview_dock.show()
+
+    def update_live_preview(self):
+        """Update the live preview if the dock is visible."""
+        if self.preview_dock.isVisible():
+            current_tab = self.tabs.currentWidget()
+            if current_tab:
+                self.preview_window.set_html(current_tab.toPlainText())
 
     def show_about(self):
         """Show the expanded About dialog with more information."""
@@ -426,7 +444,15 @@ class MiniCode(QMainWindow):
     def apply_custom_style(self, style):
         """Apply the custom style to the application."""
         self.current_style = style
-        processed_style = self.process_style_urls(style)
+        self.status_bar.showMessage("Downloading theme assets...", 5000)
+        
+        def apply_task():
+            processed_style = self.process_style_urls(style)
+            self.style_processed.emit(processed_style)
+            
+        threading.Thread(target=apply_task, daemon=True).start()
+
+    def _finish_apply_style(self, processed_style):
         self.setStyleSheet(processed_style)
         
         # Force refresh of all widgets to apply new properties (like icons)

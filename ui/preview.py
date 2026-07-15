@@ -32,3 +32,8 @@ class PreviewWindow(QMainWindow):
         if WEBENGINE_AVAILABLE:
             self.browser.setUrl(QUrl(url))
 
+    def set_html(self, html_content, base_url=""):
+        """Load raw HTML content into the previewer."""
+        if WEBENGINE_AVAILABLE:
+            self.browser.setHtml(html_content, QUrl(base_url))
+

@@ -2,7 +2,6 @@
 
 > A lightweight, portable, and powerful Python IDE — built with PyQt6.
 
-![MiniCode Banner](icon.ico)
 
 ---
 
@@ -38,15 +37,18 @@ Just double-click `MiniCode.exe` — no Python installation required.
 
 ## 🎨 SuperUI™ Themes
 
-Open **Help → SuperUI™** to customize the entire IDE with Qt Style Sheets.
+Open **Help → SuperUI™** to customize the entire IDE with Qt Style Sheets. 
 
-Built-in presets:
+You can find awesome community themes in the `themes/` directory:
+- 🌸 **girly_pink.css**: Cute pink and lavender accents
+- 💻 **mascular_charcoal.css**: A rugged, dark orange and steel-charcoal setup
+- 🌌 **tokyo_night.css**: Deep indigo/blue inspired by Tokyo Night
+- ⚽ **football_core.css**: Classic pitch green with gold accents
 
-| Theme | Preview |
-|---|---|
-| 🌸 **Pink Aesthetic** | Deep rose & magenta with glowing pink accents |
-| 🌊 **Dark Ocean** | Midnight navy blues with electric-blue highlights |
-| 🌲 **Forest** | Dark greens with emerald highlights |
+To apply a theme:
+1. Open the `.css` theme file of your choice from the `themes/` folder.
+2. Copy all the code.
+3. Open **Help → SuperUI™** in MiniCode, paste the code, and click **Apply Changes**.
 
 You can also write **your own QSS** directly in the editor, or use `url(https://...)` to apply web images as backgrounds or icons.
 

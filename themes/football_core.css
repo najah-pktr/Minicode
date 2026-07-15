@@ -1,0 +1,163 @@
+/* FootballCore Theme for MiniCode SuperUI */
+
+QMainWindow {
+    background-color: #0b2214;
+    color: #e2f5ec;
+}
+
+QDockWidget {
+    color: #ffd700;
+    font-weight: bold;
+    font-size: 11px;
+    border: 1px solid #144026;
+}
+
+QDockWidget::title {
+    background: #07170d;
+    padding-top: 6px;
+    padding-left: 10px;
+    border-bottom: 1px solid #144026;
+}
+
+QTabWidget::pane {
+    border: none;
+    background: #0b2214;
+}
+
+QTabBar::tab {
+    background: #07170d;
+    color: #a8cfb9;
+    padding: 10px 20px;
+    border-right: 1px solid #0b2214;
+    font-size: 12px;
+}
+
+QTabBar::tab:selected {
+    background: #0b2214;
+    color: #ffffff;
+    border-bottom: 2px solid #ffd700;
+}
+
+QTabBar::tab:hover {
+    background: #10331f;
+    color: #ffffff;
+}
+
+QTreeView {
+    background-color: #0b2214;
+    color: #e2f5ec;
+    border: none;
+    font-size: 13px;
+    outline: none;
+}
+
+QTreeView::item:hover {
+    background-color: #10331f;
+}
+
+QTreeView::item:selected {
+    background-color: #144026;
+    color: #ffd700;
+}
+
+QPlainTextEdit {
+    background-color: #081a0f;
+    color: #ffffff;
+    border: none;
+    font-family: 'Consolas', 'Fira Code', 'Courier New', monospace;
+    font-size: 14px;
+    selection-background-color: #1a4d2e;
+}
+
+QToolBar {
+    background-color: #07170d;
+    border-bottom: 1px solid #144026;
+    spacing: 8px;
+    padding: 4px;
+}
+
+QToolButton {
+    background-color: transparent;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    padding: 6px;
+}
+
+QToolButton:hover {
+    background-color: #10331f;
+    border: 1px solid #1a4d2e;
+}
+
+QToolButton:pressed {
+    background-color: #1a4d2e;
+}
+
+QStatusBar {
+    background-color: #1a4d2e;
+    color: #ffd700;
+    font-weight: bold;
+    font-size: 11px;
+}
+
+QStatusBar::item {
+    border: none;
+}
+
+QMenuBar {
+    background-color: #07170d;
+    color: #a8cfb9;
+    border-bottom: 1px solid #144026;
+}
+
+QMenuBar::item {
+    padding: 6px 12px;
+}
+
+QMenuBar::item:selected {
+    background-color: #10331f;
+    color: #ffffff;
+}
+
+QMenu {
+    background-color: #07170d;
+    color: #e2f5ec;
+    border: 1px solid #144026;
+    padding: 4px;
+}
+
+QMenu::item {
+    padding: 6px 24px;
+    border-radius: 2px;
+}
+
+QMenu::item:selected {
+    background-color: #144026;
+    color: #ffd700;
+}
+
+QMenu::separator {
+    height: 1px;
+    background: #144026;
+    margin: 4px 8px;
+}
+
+QScrollBar:vertical {
+    border: none;
+    background: #0b2214;
+    width: 12px;
+}
+
+QScrollBar::handle:vertical {
+    background: #144026;
+    min-height: 20px;
+    border-radius: 6px;
+    margin: 2px;
+}
+
+QScrollBar::handle:vertical:hover {
+    background: #1a4d2e;
+}
+
+QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
+    height: 0px;
+}
