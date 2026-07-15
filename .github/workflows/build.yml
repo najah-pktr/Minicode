@@ -14,6 +14,7 @@ permissions:
 jobs:
   build:
     strategy:
+      fail-fast: false
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
     runs-on: ${{ matrix.os }}
@@ -64,7 +65,11 @@ jobs:
       if: matrix.os == 'macos-latest'
       run: |
         cd dist
-        zip -r MiniCode-macos.zip MiniCode.app MiniCode
+        if [ -d "MiniCode.app" ]; then
+          zip -r MiniCode-macos.zip MiniCode.app
+        else
+          zip -r MiniCode-macos.zip MiniCode
+        fi
 
     - name: Upload Build Artifacts (Actions)
       uses: actions/upload-artifact@v4
