@@ -1,0 +1,87 @@
+name: Build Executables
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+  release:
+    types: [published]
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+
+    - name: Install dependencies (Ubuntu Linux)
+      if: matrix.os == 'ubuntu-latest'
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y libegl1-mesa libegl1
+        python -m pip install --upgrade pip
+        pip install PyQt6 PyQt6-WebEngine pyinstaller pillow
+
+    - name: Install dependencies (Windows / macOS)
+      if: matrix.os != 'ubuntu-latest'
+      run: |
+        python -m pip install --upgrade pip
+        pip install PyQt6 PyQt6-WebEngine pyinstaller pillow
+
+    - name: Build with PyInstaller (Windows)
+      if: matrix.os == 'windows-latest'
+      run: |
+        python -m PyInstaller --onefile --windowed --icon=icon.ico --add-data "icon.ico;." --name MiniCode main.py
+
+    - name: Build with PyInstaller (Linux/macOS)
+      if: matrix.os != 'windows-latest'
+      run: |
+        python -m PyInstaller --onefile --windowed --icon=icon.ico --add-data "icon.ico:." --name MiniCode main.py
+
+    - name: Package Windows Binary
+      if: matrix.os == 'windows-latest'
+      run: |
+        mv dist/MiniCode.exe dist/MiniCode-windows.exe
+
+    - name: Package Linux Binary
+      if: matrix.os == 'ubuntu-latest'
+      run: |
+        tar -czf dist/MiniCode-linux.tar.gz -C dist MiniCode
+
+    - name: Package macOS App Bundle
+      if: matrix.os == 'macos-latest'
+      run: |
+        cd dist
+        zip -r MiniCode-macos.zip MiniCode.app MiniCode
+
+    - name: Upload Build Artifacts (Actions)
+      uses: actions/upload-artifact@v4
+      with:
+        name: MiniCode-${{ matrix.os }}
+        path: |
+          dist/MiniCode-windows.exe
+          dist/MiniCode-linux.tar.gz
+          dist/MiniCode-macos.zip
+
+    - name: Upload to GitHub Release
+      if: github.event_name == 'release'
+      uses: softprops/action-gh-release@v2
+      with:
+        files: |
+          dist/MiniCode-windows.exe
+          dist/MiniCode-linux.tar.gz
+          dist/MiniCode-macos.zip
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
