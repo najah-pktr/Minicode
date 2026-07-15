@@ -30,8 +30,11 @@ pip install PyQt6 PyQt6-WebEngine
 python main.py
 ```
 
-### Use the Portable EXE
-Just double-click `MiniCode.exe` — no Python installation required.
+### Use the Portable Executables (Windows, Linux, macOS)
+No Python installation required! Download the pre-compiled version for your operating system from the **Releases** section of this repository:
+- **Windows**: Download `MiniCode-windows.exe` and run.
+- **Linux**: Download `MiniCode-linux.tar.gz`, extract it, and run the `MiniCode` binary.
+- **macOS**: Download `MiniCode-macos.zip`, extract it, and run the `MiniCode.app` bundle.
 
 ---
 
